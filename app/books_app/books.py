@@ -6,7 +6,7 @@ import configparser
 from typing import List, Dict, Union
 
 from yandex_gpt import get_transform_answer
-from text_embeddings_yan import get_embeddings
+from text_embeddings import get_embeddings
 from weaviate_search import get_search_results
 
 config = configparser.ConfigParser()
@@ -36,7 +36,7 @@ async def get_books(body: Body) -> Union[List[Dict], Dict]:
 
         text_transform_lower = text_transform.lower().replace('\n', ' ')
         logger.info(f'Successfully got text: {text_transform_lower}')
-        embeddings = list(get_embeddings(text_transform_lower))
+        embeddings = list(get_embeddings(text_transform_lower[0]))
         logger.info(f'Successfully got embeddings')
 
         books = get_search_results(text_transform_lower, embeddings)

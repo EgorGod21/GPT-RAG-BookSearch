@@ -3,13 +3,12 @@
 from tqdm import tqdm
 import pandas as pd
 import logging.config
-import time
 import configparser
 
 from weaviate import WeaviateClient
 
 from app.books_app.weaviate_connect import connect_to_weaviate, create_collection
-from app.books_app.text_embeddings_yan import get_embeddings
+from app.books_app.text_embeddings import get_embeddings
 
 config = configparser.ConfigParser()
 config.read('../config.ini')
@@ -38,8 +37,6 @@ def batch_upload_objects(client: WeaviateClient, collection_name: str, df: pd.Da
 
         with collection.batch.dynamic() as batch:
             for idx, row in tqdm(df.iterrows(), total=len(df)):
-                if idx % 10 == 0:
-                    time.sleep(1)
                 embeddings = get_embeddings(str(row['title_describe']))
                 book_object = {
                     "year": row.year,
